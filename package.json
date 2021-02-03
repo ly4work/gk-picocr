@@ -7,7 +7,9 @@
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
+    "packager:win": "node .electron-vue/build.js && electron-packager ./dist/electron/main.js picocr --win --out ./packages",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
+    "build:win": "node .electron-vue/build.js && electron-builder --win",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
     "dev": "node .electron-vue/dev-runner.js",
@@ -19,7 +21,7 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "picocrvue",
+    "productName": "picocr",
     "appId": "com.goldkinn.picocr",
     "directories": {
       "output": "build"
@@ -43,10 +45,10 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/icon.icns"
+      "icon": "static/icon.icns"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "static/icon.ico"
     },
     "linux": {
       "icon": "build/icons"
@@ -83,7 +85,7 @@
     "del": "^3.0.0",
     "devtron": "^1.4.0",
     "electron": "^2.0.4",
-    "electron-builder": "^20.19.2",
+    "electron-builder": "^22.9.1",
     "electron-debug": "^1.5.0",
     "electron-devtools-installer": "^2.2.4",
     "eslint": "^4.19.1",

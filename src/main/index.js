@@ -21,9 +21,9 @@ function createWindow() {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 563,
+    // height: 563,
     useContentSize: true,
-    width: 900,
+    // width: 900,
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
@@ -31,13 +31,14 @@ function createWindow() {
       allowRunningInsecureContent: false, //  禁止资源域名校验
     },
   });
+  mainWindow.maximize()
 
   mainWindow.loadURL(winURL);
 
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
-  mainWindow.openDevTools();
+  // mainWindow.openDevTools();
 }
 
 app.on("ready", createWindow);

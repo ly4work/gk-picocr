@@ -1,5 +1,3 @@
-// import { messages } from "./constant.js";
-// import { obj2FormData } from "./obj2FormData";
 import axios from "axios";
 import qs from "qs";
 /**
@@ -30,7 +28,7 @@ class BaiduAISdk {
   // baidusdk ajax
   static identify({ url, data, success, fail, complete }) {
     return new Promise((resolve, reject) => {
-      axios({
+      return axios({
         url: BaiduAISdk.BAIDU_API_AUTH_URL,
         params: {
           grant_type: BaiduAISdk.CLIENT_CREDENTIALS,
@@ -42,19 +40,14 @@ class BaiduAISdk {
       }).then((res) => {
         const { access_token } = res.data;
         console.log("【OCR TOKEN => ", access_token);
-        axios({
+        return axios({
           method: "POST",
-          // headers: {
-          //   "Content-Type": "multipart/form-data",
-          // },
           headers: {
             "content-type": "application/x-www-form-urlencoded;charset=utf-8",
           },
           url: `${url}?access_token=${access_token}`,
           data: qs.stringify(data),
-          // data: obj2FormData(data),
         }).then((ret) => {
-          // console.log("【OCR Reulst】 => ", ret);
           resolve(ret.data);
         });
       });
@@ -62,7 +55,7 @@ class BaiduAISdk {
   }
   //  车型识别接口
   static identifyCar({ image, top_num = 5, baike_num = 10, success, fail }) {
-    BaiduAISdk.identify({
+    return BaiduAISdk.identify({
       url: BaiduAISdk.BAIDU_API_CAR_URL,
       data: {
         image,
@@ -87,7 +80,7 @@ class BaiduAISdk {
   }
   //  植物识别
   static identifyPlant({ image, success, fail, baike_num = 10 }) {
-    BaiduAISdk.identify({
+    return BaiduAISdk.identify({
       url: BaiduAISdk.BAIDU_API_PLANT_URL,
       data: {
         image,
@@ -97,21 +90,9 @@ class BaiduAISdk {
       fail,
     });
   }
-  //  红酒识别
-  static identifyRedwine({ image, success, fail }) {
-    BaiduAISdk.identify({
-      url: BaiduAISdk.BAIDU_API_REDWINE_URL,
-      data: {
-        image,
-      },
-      success,
-      fail,
-    });
-  }
-
   //  动物识别
   static identifyAnimal({ image, success, fail, top_num = 5, baike_num = 10 }) {
-    BaiduAISdk.identify({
+    return BaiduAISdk.identify({
       url: BaiduAISdk.BAIDU_API_ANIMAL_URL,
       data: {
         image,

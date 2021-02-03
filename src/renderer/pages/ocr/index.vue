@@ -9,15 +9,15 @@
       <el-button
         style="margin-left: 15px"
         size="middle"
-        @click="handleChangeTextDiffDrawer"
-        >查看文字比对校注</el-button
+        @click="handleShowJMark"
+        >展示校注</el-button
       >
-      <!-- <el-button
+      <el-button
         style="margin-left: 15px"
         size="middle"
-        @click="handleChangeDirection"
-        >切换{{ directionText }}版</el-button
-      > -->
+        @click="handleChangeTextDiffDrawer"
+        >查看文字比对</el-button
+      >
       <el-switch
         v-model="dicrectionType"
         active-text="横版"
@@ -34,14 +34,6 @@
           />
         </span>
       </el-button>
-      <!-- <el-switch
-        v-model="showHover"
-        active-text="关闭遮罩"
-        inactive-text="开启遮罩"
-        @change="handleChangeHoverSwitch"
-        style="margin: 0 10px;"
-      >
-      </el-switch> -->
     </div>
     <main
       :class="`main main_${Number(!Boolean(dicrectionType))}`"
@@ -118,14 +110,6 @@
           <ul class="ul">
             <li v-for="(item, i) in imageATextList" :key="item.words + i">
               {{ i + 1 }}.
-              <!-- <span v-if="imageBTextList[i]">
-                <b
-                  :class="
-                    `${item.words !== imageBTextList[i].words && 'isDiff'}`
-                  "
-                  >{{ item.words }}</b
-                >
-              </span> -->
               <span :class="`${!item.noDiff && 'isDiff'}`">
                 {{ item.words }}
               </span>
@@ -139,14 +123,6 @@
           <ul class="ul">
             <li v-for="(item, i) in imageBTextList" :key="item.words + i">
               {{ i + 1 }}.
-              <!-- <span v-if="imageATextList[i]">
-                <b
-                  :class="
-                    `${item.words !== imageATextList[i].words && 'isDiff'}`
-                  "
-                  >{{ item.words }}</b
-                >
-              </span> -->
               <span :class="`${!item.noDiff && 'isDiff'}`">
                 {{ item.words }}
               </span>
@@ -164,24 +140,10 @@ import Utils from "./../../utils";
 import { Loading, Message } from "element-ui";
 import { cloneDeep } from "lodash";
 
-const DirectionEnum = {
-  horizontal: 0,
-  vertical: -1,
-};
-
-const DirectionMap = {
-  0: "horizontal",
-  "-1": "vertical",
-};
 export default {
   name: "landing-page",
   components: { SystemInformation },
-  computed: {
-    directionText() {
-      console.log(this.direction);
-      return Number(this.direction) !== DirectionEnum.horizontal ? "竖" : "横";
-    },
-  },
+  computed: {},
   data() {
     return {
       dicrectionType: true,
@@ -206,7 +168,6 @@ export default {
       imageBTextList: [],
       imageAFile: null,
       imageBFile: null,
-      direction: DirectionEnum.horizontal,
       showDrawer: false,
       color: "#ff0000",
     };
@@ -217,37 +178,36 @@ export default {
     });
   },
   methods: {
-    handleChangeDirection() {
-      this.direction = DirectionEnum[DirectionMap[~this.direction]];
-      let imgArray = ["imageA", "imageB"];
-      imgArray.forEach((item) => {
-        this.handleComputeImageCanvasSize(item);
-      });
+    //  展示校注
+    handleShowJMark() {
+      this.diffWords();
     },
     //  切换排版
     handleChangeDirectionSwitch(event) {
       console.log(event);
       this.dicrectionType = event;
+      let imgArray = ["imageA", "imageB"];
+      imgArray.forEach((item) => {
+        this.handleComputeImageCanvasSize(item);
+      });
     },
     //  切换遮罩显示
     handleChangeHoverSwitch(event) {
       console.log(event);
       this.showHover = event;
     },
+    //  展示文字比对抽屉
     handleChangeTextDiffDrawer() {
       this.showDrawer = !this.showDrawer;
       if (this.showDrawer) {
         this.diffWords();
       }
     },
-    async recognize() {},
-    open(link) {
-      this.$electron.shell.openExternal(link);
-    },
     //  更改标注颜色
     handleChangeColor() {
       this.handleRenderMark();
     },
+    //  监听图片上传回调
     async handleChangeOrigin(file, fileList, imageKey) {
       console.log([...arguments]);
       const res = await Utils.img2Base64({ file });
@@ -280,8 +240,6 @@ export default {
 
       //  绘制比率
       const ratio = this.imageBSize.ow / this.imageBSize.w;
-      // ctx.fillStyle = "red";
-      // ctx.fillRect();
 
       // 描边矩形方法：strokeRect(x,y,w,h)
       ctx.strokeStyle = this.color;
@@ -355,10 +313,12 @@ export default {
           this[item.key + "TextList"] = (ret && ret.words_result) || [];
           this.$nextTick(() => {
             loadingInstance.close();
+            this.handleShowJMark();
           });
         }
       });
     },
+    //  计算文字diff
     diffWords() {
       const ATextList = cloneDeep(this.imageATextList);
       const BTextList = cloneDeep(this.imageBTextList);
@@ -382,7 +342,6 @@ export default {
       console.log("【IMAGE_B_TEXT_LIST】 => ", this.imageBTextList);
       this.handleRenderMark();
     },
-    drawMarkCircle() {},
   },
 };
 </script>

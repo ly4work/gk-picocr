@@ -23,6 +23,7 @@
     <transition name="transitionRouter">
       <router-view></router-view>
     </transition>
+    <footer>Copyright©{{ new Date().getFullYear() }} 高金数字化运营中心</footer>
   </div>
 </template>
 
@@ -64,6 +65,13 @@ export default {
   // transform: translate3d(100%, 0, 0);
   opacity: 0;
 }
+body {
+  background: radial-gradient(
+    ellipse at top left,
+    white 40%,
+    rgba(229, 229, 229, 0.9) 100%
+  );
+}
 .brand {
   background: $main;
   height: 60px;
@@ -97,6 +105,11 @@ export default {
     cursor: pointer;
   }
 }
-
+footer {
+  color: #666;
+  text-align: center;
+  padding: 10px 5px;
+  font-size: 14px;
+}
 /* CSS */
 </style>
