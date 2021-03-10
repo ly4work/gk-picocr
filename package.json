@@ -1,8 +1,8 @@
 {
-  "name": "picocrvue",
+  "name": "gk-picocr",
   "version": "0.0.1",
   "author": "liyang <ly4work@163.com>",
-  "description": "An electron-vue project",
+  "description": "版面文字比对工具",
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
